@@ -1,11 +1,11 @@
-import { t } from 'elysia'
+import { t } from "elysia"
 
-export const AuthSchema = t.Object({
+export const authSchema = t.Object({
     id: t.String(),
     username: t.String(),
     password: t.String(),
-    createdAt: t.String(),
-    updatedAt: t.String()
+    createdAt: t.Date(),
+    updatedAt: t.Date()
 })
 
-export type AuthSchema = typeof AuthSchema.static
+export type AuthSchema = typeof authSchema.static

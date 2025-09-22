@@ -46,3 +46,6 @@ package-lock.json
 
 db-data
 src/providers/database/generated
+
+db-data
+src/providers/database/generated

@@ -15,9 +15,15 @@ datasource db {
 }
 
 model User {
+<<<<<<< HEAD
   id       String   @id @default(uuid())
   username String   @unique
   password String
+=======
+  id        String   @id @default(cuid())
+  username  String   @unique
+  password  String
+>>>>>>> 4e3031b960a2bcc1234a69ef7ccb4d1aee32241f
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

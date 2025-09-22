@@ -1,39 +1,26 @@
 import Elysia, { t } from "elysia";
-import { AuthSchema } from "./auth.schema";
+import { authSchema } from "./auth.schema";
 import { AuthService } from "./auth.service";
 
 export const AuthController = new Elysia({ prefix: "/auth" })
   .post(
     "/register",
     async ({ body, set }) => {
-      try {
-        const user = await AuthService.register(body);
-        set.status = "Created"; 
-        return { success: true, user };
-      } catch (err: any) {
-        console.error("Error registering user:", err);
-        set.status = "Bad Request";
-        return { success: false, error: err.message };
-      }
+      const userRegister = await AuthService.register(body);
+      set.status = "Created";
+      return userRegister;
     },
     {
-      body: t.Omit(AuthSchema, ["id", "createdAt", "updatedAt"]),
+      body: t.Omit(authSchema, ["id", "createdAt", "updatedAt"]),
     }
   )
-
   .post(
     "/login",
     async ({ body, set, jwt }) => {
-      try {
-        const { username, password } = body;
-        const user = await AuthService.login(username, password, jwt);
-        set.status = "OK";
-        return { success: true, ...user };
-      } catch (err: any) {
-        console.error("Error logging in:", err);
-        set.status = "Bad Request";
-        return { success: false, error: err.message };
-      }
+      const { username, password } = body;
+      const userLogin = await AuthService.login(username, password, jwt);
+      set.status = "OK";
+      return userLogin;
     },
     {
       body: t.Object({
@@ -42,24 +29,27 @@ export const AuthController = new Elysia({ prefix: "/auth" })
       }),
     }
   )
-
-  .get(
-    "/me",
-    async ({ jwt, set, headers }) => {
-        try {
-            const authHeader = headers["authorization"];
-            if (!authHeader) throw new Error("Authorization header missing");
-
-            const token = authHeader.split(" ")[1];
-            if (!token) throw new Error("Token missing");
-
-            const user = await jwt.verify(token);
-            set.status = "OK";
-            return { success: true, user };
-        } catch (err: any) {
-            console.error("Error verifying token:", err);
-            set.status = "Unauthorized";
-            return { success: false, error: err.message };
-        }
+  .get("/me", async ({ jwt, set, headers }) => {
+    const authHeader = headers["authorization"];
+    if (!authHeader) {
+      set.status = 401;
+      return "Authorization header not found"
     }
-  )
+
+    const token = authHeader.split(" ")[1];
+
+    const payLoad: {
+      username: string
+      "exp": number,
+      "iat": number
+    } = await jwt.verify(token);
+
+    if (!payLoad) {
+      set.status = 401;
+      return "Invalid token"
+    }
+
+    set.status = 200
+    set.headers["x-username"] = payLoad.username
+    return payLoad
+  });

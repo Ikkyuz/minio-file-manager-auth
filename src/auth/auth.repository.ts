@@ -11,9 +11,9 @@ export namespace AuthRepository {
     }
     export async function findUser(username:string){
         return await prisma.user.findUnique({
-            where: { username },
+            where: { username},
             select: {
-                id: false,
+                id:false,
                 username: true,
                 password: true,
                 createdAt:false,

@@ -10,7 +10,8 @@ const app = new Elysia()
   .use(
     jwt({
       name: "jwt",
-      secret: "SUPER_SECRET_KEY"
+      secret: "SUPER_SECRET_KEY",
+      exp: '1h'
     })
   )
   .get("/", () => "Hello Elysia")
