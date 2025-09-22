@@ -60,6 +60,10 @@ bun x prisma db push
 bun x prisma migrate reset
 ```
 
+```sh
+bun x prisma studio
+```
+
 # Build docker image
 
 ```sh

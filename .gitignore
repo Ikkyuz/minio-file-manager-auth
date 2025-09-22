@@ -43,3 +43,6 @@ yarn-error.log*
 package-lock.json
 **/*.bun
 /src/generated/prisma
+
+db-data
+src/providers/database/generated

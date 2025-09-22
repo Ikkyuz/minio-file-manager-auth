@@ -31,7 +31,7 @@ export const AuthController = new Elysia({ prefix: "/auth" })
         return { success: true, ...user };
       } catch (err: any) {
         console.error("Error logging in:", err);
-        set.status = "Unauthorized";
+        set.status = "Bad Request";
         return { success: false, error: err.message };
       }
     },
@@ -44,7 +44,7 @@ export const AuthController = new Elysia({ prefix: "/auth" })
   )
 
   .get(
-    "/profile",
+    "/me",
     async ({ jwt, set, headers }) => {
         try {
             const authHeader = headers["authorization"];
